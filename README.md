@@ -4,7 +4,7 @@ Class `cz.kramolis.reactor.temp.ReactorEventBusTest` simply tests [Reactor Event
 
 ## Run it
 
-Each test as JUnit test menthod. No assertions there, so sorry.
+Each test as JUnit test method. No assertions there, so sorry.
 
 ```shell
 $ mvn test

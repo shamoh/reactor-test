@@ -35,6 +35,11 @@ public class ReactorEventBusTest {
     // # Publish/Subscribe
     //
 
+    /**
+     * <pre>
+     (A) <[ main ]> New topic event: Hello World!
+     * </pre>
+     */
     @Test
     public void testHelloWorld() {
         // new default EventBus instance
@@ -50,6 +55,11 @@ public class ReactorEventBusTest {
         bus.notify("topic", Event.wrap("Hello World!"));
     }
 
+    /**
+     * <pre>
+     (A) <[ main ]> New topic event: Cruel World!
+     * </pre>
+     */
     @Test
     public void testHelloWorldHotStream() {
         final EventBus bus = EventBus.create();
@@ -67,6 +77,13 @@ public class ReactorEventBusTest {
         bus.notify("topic", Event.wrap("Cruel World!"));
     }
 
+    /**
+     * <pre>
+     (A) <[ main ]> New topic event: Hello World!
+     (B)                                       <[ main ]> New topic event: Hello World!
+     (C)                                                                              <[ main ]> New topic event: Hello World!
+     * </pre>
+     */
     @Test
     public void testHelloWorldMoreListeners() {
         final EventBus bus = EventBus.create();
@@ -91,6 +108,18 @@ public class ReactorEventBusTest {
 
     // ## Selectors
 
+    /**
+     * <pre>
+     (A) <[ main ]> New topic event: Hello World!
+     (B)                                       <[ main ]> New topic event: Hello World!
+     (C)                                                                              <[ main ]> New topic event: Hello World!
+     (B)                                       <[ main ]> New topic event: Cruel World!
+     (C)                                                                              <[ main ]> New topic event: Cruel World!
+     (C)                                                                              <[ main ]> New topic event: Hello Pink Floyd!
+     (C)                                                                              <[ main ]> New topic event: Hello NoName!
+     (D)                                                                                                                     <[ main ]> New topic event: Hello NoName!
+     * </pre>
+     */
     @Test
     public void testHelloWorldSelectors() {
         final EventBus bus = EventBus.create();
@@ -136,6 +165,12 @@ public class ReactorEventBusTest {
     // # Request/Reply
     //
 
+    /**
+     * <pre>
+     (B)                                       <[ main ]> Received event: Hello World!
+     (A) <[ main ]> Got reply event: HELLO WORLD!
+     * </pre>
+     */
     @Test
     public void testRequestReply() {
         final EventBus bus = EventBus.create();
@@ -161,6 +196,14 @@ public class ReactorEventBusTest {
         }
     }
 
+    /**
+     * <pre>
+     (B)                                       <[ main ]> Received event: Hello World!
+     (A) <[ main ]> Got reply event: HELLO WORLD!
+     (C)                                                                              <[ main ]> Received event: Hello World!
+     (A) <[ main ]> Got reply event: hello world!
+     * </pre>
+     */
     @Test
     public void testRequestReplyMoreListeners() {
         final EventBus bus = EventBus.create();
@@ -194,6 +237,13 @@ public class ReactorEventBusTest {
         }
     }
 
+    /**
+     * <pre>
+     (B)                                       <[ main ]> Received event: Hello World!
+     (A) <[ main ]> Got reply event: HELLO WORLD!
+     (C)                                                                              <[ main ]> Received event: Hello World!
+     * </pre>
+     */
     @Test
     public void testRequestReplyMoreListenersNoResponse() {
         final EventBus bus = EventBus.create();
@@ -223,6 +273,12 @@ public class ReactorEventBusTest {
         }
     }
 
+    /**
+     * <pre>
+     (B)                                       <[ main ]> Received event: Hello World!
+     (A) <[ main ]> Got reply event: HELLO WORLD!
+     * </pre>
+     */
     @Test
     public void testRequestReplyNoReplyTopic() {
         final EventBus bus = EventBus.create();
@@ -248,9 +304,15 @@ public class ReactorEventBusTest {
     }
 
     //
-    // ## Cancel registration
+    // ## Pause/Resume registration
     //
 
+    /**
+     * <pre>
+     (A) <[ main ]> New topic event: Hello World!
+     (A) <[ main ]> New topic event: Hello Pink Floyd!
+     * </pre>
+     */
     @Test
     public void testPause() {
         final EventBus bus = EventBus.create();
@@ -263,17 +325,26 @@ public class ReactorEventBusTest {
 
         bus.notify("topic", Event.wrap("Hello World!"));
 
-        // ...some time later...
+        // pause listening
         reg.pause();
 
-        // ...some time later...
         bus.notify("topic", Event.wrap("Cruel World!"));
+
+        // resume listening
+        reg.resume();
+
+        bus.notify("topic", Event.wrap("Hello Pink Floyd!"));
     }
 
     //
     // ## Cancel registration
     //
 
+    /**
+     * <pre>
+     (A) <[ main ]> New topic event: Hello World!
+     * </pre>
+     */
     @Test
     public void testCancel() {
         final EventBus bus = EventBus.create();
@@ -286,15 +357,21 @@ public class ReactorEventBusTest {
 
         bus.notify("topic", Event.wrap("Hello World!"));
 
-        // ...some time later...
+        // cancel listening
         reg.cancel();
 
-        // ...some time later...
         bus.notify("topic", Event.wrap("Cruel World!"));
     }
 
     // # Init EventBus with Processor
 
+    /**
+     * <pre>
+     (A) <[ async-1 ]> New topic event: Hello World!
+     (B)                                       <[ async-1 ]> New topic event: Hello World!
+     (C)                                                                              <[ async-1 ]> New topic event: Hello World!
+     * </pre>
+     */
     @Test
     public void testHelloWorldAsyncProcessor() throws InterruptedException {
         final EventBus bus = EventBus.create(Processors.topic());
@@ -327,6 +404,11 @@ public class ReactorEventBusTest {
     // ## listen on Publisher
     //
 
+    /**
+     * <pre>
+     (A) <[ main ]> New topic event: Hello World!
+     * </pre>
+     */
     @Test
     public void testHelloWorldPublisher() {
         final EventBus bus = EventBus.create();
@@ -356,6 +438,11 @@ public class ReactorEventBusTest {
         bus.notify("topic", Event.wrap("Hello World!"));
     }
 
+    /**
+     * <pre>
+     (A) <[ main ]> New topic event: Hello World!
+     * </pre>
+     */
     @Test
     public void testHelloWorldPublisherAsStream() {
         final EventBus bus = EventBus.create();
@@ -370,6 +457,11 @@ public class ReactorEventBusTest {
         bus.notify("topic", Event.wrap("Hello World!"));
     }
 
+    /**
+     * <pre>
+     (A) <[ main ]> New topic event: Cruel World!
+     * </pre>
+     */
     @Test
     public void testHelloWorldPublisherFilter() {
         final EventBus bus = EventBus.create();

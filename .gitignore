@@ -1,2 +1,6 @@
 # maven noise
 target/
+
+# idea noise
+.idea/
+*.iml
