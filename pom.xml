@@ -73,4 +73,13 @@
         <reactor.version>2.1.0.BUILD-SNAPSHOT</reactor.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <!--for:reactor-->
+            <id>spring-milestone</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/libs-snapshot</url>
+        </repository>
+    </repositories>
+
 </project>
